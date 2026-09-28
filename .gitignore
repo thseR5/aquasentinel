@@ -7,5 +7,5 @@ venv/
 .ipynb_checkpoints/
 *.egg-info/
 .pytest_cache/
-# Keep outputs/ figures & model? They are reproducible; ignore heavy artifacts.
-outputs/model.joblib
+# model.joblib (38K) is committed so the deployed app loads instantly;
+# the app also self-heals by rebuilding it if the pickle is absent/incompatible.

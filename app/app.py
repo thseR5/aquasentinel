@@ -38,12 +38,29 @@ def load_all():
     return df, feat_df, feat_names
 
 
-@st.cache_resource(show_spinner=False)
+@st.cache_resource(show_spinner="Preparing risk model…")
 def load_model():
+    """Load the trained model artifact; rebuild it if missing or incompatible.
+
+    On a fresh cloud deploy the pickled artifact may be absent, or a different
+    scikit-learn version may refuse to unpickle it. In both cases we refit from
+    the raw data (fast: three elastic-net fits, no cross-validation), so the app
+    always has a working model without any manual build step.
+    """
     path = ROOT / "outputs" / "model.joblib"
     if path.exists():
-        return joblib.load(path)["model"]
-    return None
+        try:
+            return joblib.load(path)["model"]
+        except Exception:
+            pass  # version mismatch or corrupt -> rebuild below
+    try:
+        from aquasentinel.model import fit_full
+        _df = data.build_analysis_table()
+        _feat_df, _names = features.build_feature_matrix(_df)
+        _targets = _df[["siteCode"] + RISK_COMPONENTS]
+        return fit_full(_feat_df, _targets, _names)
+    except Exception:
+        return None
 
 
 def risk_color(v: float) -> str:
