@@ -1,0 +1,60 @@
+feature,plain,n,rho,p
+patchDensityVeg250m,vegetation fragmentation within 250 m,96,0.277,0.0063
+log_distanceToSewageStations,distance to wastewater stations,96,-0.224,0.0281
+log_distChampCulture,distance to crop fields,96,-0.223,0.0291
+log_distanceToHospitals,distance to hospitals,96,-0.212,0.0378
+patchDensity1500m,landscape fragmentation within 1500 m,96,-0.204,0.0466
+patchDensityVeg500m,vegetation fragmentation within 500 m,96,0.199,0.0515
+altitude,site altitude,75,0.198,0.0878
+log_distanceToMotorwayRoad,distance to motorways,96,-0.197,0.0541
+patchDensityVeg750m,vegetation fragmentation within 750 m,96,0.193,0.0594
+patchDensityVeg2000m,vegetation fragmentation within 2000 m,96,0.189,0.0649
+maxTemperatureC,peak temperature,96,0.184,0.0733
+imperviousPct2000m,paved/impervious surface within 2000 m,96,0.182,0.0766
+maxPrecipitationMm,peak rainfall,96,0.179,0.0801
+imperviousPct1500m,paved/impervious surface within 1500 m,96,0.175,0.0889
+meanTemperatureC,mean temperature,96,0.167,0.1041
+urbanPct2000m,urban land cover within 2000 m,96,0.164,0.1114
+patchDensity2000m,landscape fragmentation within 2000 m,96,-0.162,0.1143
+urbanPct1500m,urban land cover within 1500 m,96,0.159,0.1215
+patchDensityVeg1500m,vegetation fragmentation within 1500 m,96,0.158,0.1247
+humanDensityProxy1500m,human density within 1500 m,96,0.152,0.1383
+vegCoverFrac2000m,vegetation cover within 2000 m,96,-0.147,0.1526
+patchDensity1000m,landscape fragmentation within 1000 m,96,-0.139,0.1767
+vegCoverFrac1500m,vegetation cover within 1500 m,96,-0.13,0.2066
+humanDensityProxy2000m,human density within 2000 m,96,0.128,0.2145
+humanDensityProxy1000m,human density within 1000 m,96,0.125,0.2267
+patchDensity500m,landscape fragmentation within 500 m,96,-0.12,0.2427
+patchDensityVeg1000m,vegetation fragmentation within 1000 m,96,0.116,0.2613
+urbanPct1000m,urban land cover within 1000 m,96,0.115,0.2635
+imperviousPct1000m,paved/impervious surface within 1000 m,96,0.113,0.2746
+vegCoverFrac1000m,vegetation cover within 1000 m,96,-0.097,0.3466
+vegCoverFrac750m,vegetation cover within 750 m,96,-0.082,0.4281
+urbanPct750m,urban land cover within 750 m,96,0.08,0.4393
+humanDensityProxy50m,human density within 50 m,96,-0.079,0.4439
+vegCoverFrac500m,vegetation cover within 500 m,96,-0.076,0.4626
+imperviousPct50m,paved/impervious surface within 50 m,96,-0.075,0.4678
+vegCoverFrac250m,vegetation cover within 250 m,96,-0.075,0.4679
+humanDensityProxy750m,human density within 750 m,96,0.074,0.4723
+imperviousPct750m,paved/impervious surface within 750 m,96,0.065,0.5319
+humanDensityProxy100m,human density within 100 m,96,-0.064,0.5386
+log_distanceToLivingStreetRoad,distance to residential streets,96,-0.061,0.5567
+nitrate_mgL,nitrate concentration,93,0.061,0.5602
+patchDensity250m,landscape fragmentation within 250 m,96,-0.06,0.5635
+imperviousPct500m,paved/impervious surface within 500 m,96,0.049,0.6371
+vegCoverFrac50m,vegetation cover within 50 m,96,0.045,0.6628
+meanPrecipitationMm,mean rainfall,96,-0.045,0.6657
+urbanPct500m,urban land cover within 500 m,96,0.043,0.679
+humanDensityProxy500m,human density within 500 m,96,0.041,0.6903
+humanDensityProxy250m,human density within 250 m,96,-0.04,0.7016
+urbanPct100m,urban land cover within 100 m,96,0.038,0.7116
+patchDensityVeg100m,vegetation fragmentation within 100 m,96,-0.031,0.7679
+patchDensityVeg50m,vegetation fragmentation within 50 m,96,-0.029,0.7805
+patchDensity100m,landscape fragmentation within 100 m,96,-0.022,0.8344
+patchDensity750m,landscape fragmentation within 750 m,96,0.018,0.8602
+vegCoverFrac100m,vegetation cover within 100 m,96,-0.013,0.8983
+urbanPct250m,urban land cover within 250 m,96,-0.011,0.9133
+imperviousPct250m,paved/impervious surface within 250 m,96,0.004,0.9659
+patchDensity50m,landscape fragmentation within 50 m,96,-0.003,0.9784
+urbanPct50m,urban land cover within 50 m,96,0.001,0.9929
+imperviousPct100m,paved/impervious surface within 100 m,96,0.0,0.9981

@@ -1,0 +1,65 @@
+{
+  "coverage": {
+    "sites": 106,
+    "health_risks": 96,
+    "nitrates": 100,
+    "urban_parameters": 104,
+    "weather_summary": 106,
+    "health_timeseries": 96
+  },
+  "union_sites": 106,
+  "sites_without_target": 10,
+  "composite_max_error": 6.666666666671484e-05,
+  "risk_describe": {
+    "scaledPathogenRisk": {
+      "count": 96.0,
+      "mean": 0.1976,
+      "std": 0.1809,
+      "min": 0.0,
+      "25%": 0.0748,
+      "50%": 0.1266,
+      "75%": 0.2978,
+      "max": 1.0
+    },
+    "scaledFecalRisk": {
+      "count": 96.0,
+      "mean": 0.3484,
+      "std": 0.195,
+      "min": 0.0,
+      "25%": 0.2126,
+      "50%": 0.316,
+      "75%": 0.4436,
+      "max": 1.0
+    },
+    "scaledArgRisk": {
+      "count": 96.0,
+      "mean": 0.3562,
+      "std": 0.1655,
+      "min": 0.0,
+      "25%": 0.2708,
+      "50%": 0.3546,
+      "75%": 0.4614,
+      "max": 1.0
+    },
+    "healthRiskScore": {
+      "count": 96.0,
+      "mean": 0.3007,
+      "std": 0.1281,
+      "min": 0.0748,
+      "25%": 0.2164,
+      "50%": 0.2656,
+      "75%": 0.3701,
+      "max": 0.7822
+    }
+  },
+  "citizen_quality": {
+    "n_total": 71,
+    "n_ok": 15,
+    "n_review": 56,
+    "junk_name": 10,
+    "likely_swapped": 1,
+    "invalid_coords": 0,
+    "duplicate": 19,
+    "out_of_region": 30
+  }
+}
