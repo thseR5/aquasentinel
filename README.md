@@ -1,43 +1,53 @@
 # AquaSentinel
 
-**A One Health early-warning & insight platform for urban streams.**
+**Evidence Before Action — an evidence-first environmental intelligence engine for urban streams.**
 *Healthy waters, healthy ecosystems, healthy communities.*
 
-> AquaSentinel tells a city **which stream sites are a health risk, why, and what a
-> citizen or officer should do next — and it tells you honestly how sure it is.**
+> AquaSentinel **discovers patterns, outliers and risk fingerprints** across citizen
+> and environmental data, **challenges** each finding for statistical robustness
+> (including city confounding), and presents **only what survives** — with the
+> evidence behind it. **No evidence, no insight.**
 
 Built for the **OneAquaHealth IEEE Global Hackathon 2026**.
-**Primary track:** Resilience Informatics. **Secondary:** Data-to-Insight,
-AI-Supported Assessment, Digital Health Standards.
+**Primary track:** Data-to-Insight. **Secondary:** AI-Supported Assessment,
+Digital Health Standards, Resilience Informatics.
 
 ---
 
 ## Why this exists
 OneAquaHealth monitors urban streams across five European cities (Coimbra, Toulouse,
-Ghent, Benevento, Oslo). The data is rich but hard to act on: officers can't see
-which sites are risky and why, citizen submissions are noisy, and there's no
-early-warning view. AquaSentinel closes those gaps — and does it with **scientific
-honesty**, because the judges are researchers.
+Ghent, Benevento, Oslo). The data is rich but messy, cross-sectional and confounded
+by city. Most tools give you *another dashboard*. AquaSentinel instead **finds what
+the data is actually saying and tells you whether it's worth believing** — the
+question a researcher really has.
 
 ## What it does
-1. **Data-quality validator** — deterministic, explainable rules flag junk names,
-   swapped coordinates, duplicates and out-of-region points. **Catches 79% (56/71)**
-   of the real citizen submissions needing review.
-2. **Risk map** — 106 sites across 5 cities, coloured by observed pathogen / faecal /
-   ARG / nitrate risk, colour-blind-safe.
-3. **Site health card** — the three risk components, nitrate vs an indicative EU
-   reference, city/EU percentile, plain-language drivers, and an uncertainty interval.
-4. **Drivers & model page** — Spearman associations + **leave-one-city-out** validation
-   against a baseline, with an honest "what the data can and can't tell us" box.
-5. **Scenario / early-warning simulator** — move impervious cover, vegetation, distance
-   to sewage, rainfall → see the risk shift and fire a mock officer alert when it
-   crosses the city's 80th percentile.
-6. **Citizen copilot** — submit a site → validate → estimate a screening band from the
-   nearest monitored site → explain → suggest actions. The assistant only explains
-   validated data and model output; it never invents numbers.
-7. **Interoperability API** — the same data as OGC SensorThings-shaped JSON, GeoJSON,
-   and an **HL7 FHIR Observation** mapping (environment ↔ public health).
-8. **Accessibility & i18n** — English + Portuguese, jargon glossary, WCAG-aware palette.
+1. **Insight Discovery Engine** — automatically searches the network for patterns,
+   associations, contradictions, outliers, cross-city differences and coverage gaps.
+   **11 insights discovered, 7 survive the challenge.**
+2. **"Challenge this insight"** — each finding is re-tested by removing city structure
+   (within-city analysis) and a permutation test. Confounded findings are *rejected*:
+   e.g. "distance to crop fields" (global ρ=−0.22) **collapses to ρ=−0.06 within city**
+   and is marked weakened. The engine disproves its own weak claims.
+3. **Evidence Cards** — every insight shows the statistic, sample size, geographic
+   scope, an evidence-strength profile (observed / association / prediction / causal),
+   what it *cannot* conclude, and the suggested next investigation.
+4. **Risk fingerprints** — sites clustered by their observed pathogen / faecal / ARG
+   profile (2 distinct profiles, permutation p=0.010); a single composite score blurs
+   these together.
+5. **Data-quality validator** — deterministic rules flag junk names, swapped
+   coordinates, duplicates and out-of-region points. **Flags 79% (56/71)** of real
+   citizen submissions needing review.
+6. **Risk map + site health cards** — 106 sites, observed risk components, nitrate vs
+   an indicative EU reference, percentiles, plain-language drivers, uncertainty.
+7. **Association & prioritisation model** (supporting) — elastic-net with
+   **leave-one-city-out** validation; honestly reported to *not* beat a city-mean
+   baseline, so it is scoped to explanation and screening, never prediction.
+8. **Scenario tool + citizen copilot** — what-if exploration with wide intervals, and a
+   citizen reporter that validates a submission and explains only validated data.
+9. **Interoperability API** — OGC SensorThings-shaped JSON, GeoJSON, and an **HL7 FHIR
+   Observation** mapping (environment ↔ public health).
+10. **Accessibility & i18n** — English + Portuguese, jargon glossary, colour-blind-safe.
 
 ## Honest headline
 On **leave-one-city-out** cross-validation, **no model (elastic-net or gradient

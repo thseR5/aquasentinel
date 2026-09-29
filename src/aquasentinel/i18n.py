@@ -9,6 +9,8 @@ LANGS = {"en": "English", "pt": "Português"}
 
 _STR = {
     "nav": {"en": "Section", "pt": "Secção"},
+    "insight_feed": {"en": "Insight feed", "pt": "Descobertas"},
+    "fingerprints": {"en": "Risk fingerprints", "pt": "Perfis de risco"},
     "overview": {"en": "Overview", "pt": "Visão geral"},
     "map": {"en": "Risk map", "pt": "Mapa de risco"},
     "health_card": {"en": "Site health card", "pt": "Ficha do local"},
@@ -21,16 +23,39 @@ _STR = {
         "en": "Screening & prioritisation only. Not a diagnosis or a 'safe to swim' judgement.",
         "pt": "Apenas triagem e priorização. Não é diagnóstico nem indicação de 'seguro para nadar'.",
     },
-    "overview_title": {"en": "AquaSentinel — healthy waters, healthy communities",
-                       "pt": "AquaSentinel — águas saudáveis, comunidades saudáveis"},
+    "overview_title": {"en": "AquaSentinel — Evidence Before Action",
+                       "pt": "AquaSentinel — Evidência Antes da Ação"},
     "pitch": {
-        "en": "**AquaSentinel tells a city which stream sites are a health risk, why, "
-              "and what to do next — and it tells you honestly how sure it is.** "
-              "It links stream lab data, citizen reports, landscape and climate context "
-              "into one screening view under the One Health approach.",
-        "pt": "**O AquaSentinel indica que locais de ribeiras representam risco para a saúde, "
-              "porquê e o que fazer a seguir — e diz honestamente qual a certeza.**",
+        "en": "**AquaSentinel is an evidence-first environmental intelligence engine.** It "
+              "discovers patterns, outliers and risk fingerprints across citizen and "
+              "environmental data, *challenges* each finding for statistical robustness "
+              "(including city confounding), and presents only what survives — with the "
+              "evidence behind it. No evidence, no insight.",
+        "pt": "**O AquaSentinel é um motor de inteligência ambiental orientado por evidência.** "
+              "Descobre padrões e perfis de risco, testa cada achado quanto à robustez e "
+              "apresenta apenas o que sobrevive — com a evidência por trás.",
     },
+    # Insight-feed UI
+    "feed_title": {"en": "What did the data reveal?", "pt": "O que revelaram os dados?"},
+    "feed_intro": {"en": "AquaSentinel searched the network for patterns, associations, "
+                         "contradictions, outliers and coverage gaps — then tried to disprove "
+                         "each one. Findings that survived the challenge are shown first.",
+                   "pt": "O AquaSentinel procurou padrões e tentou refutá-los. Os que sobreviveram aparecem primeiro."},
+    "survived": {"en": "Survived challenge", "pt": "Sobreviveu ao teste"},
+    "weakened": {"en": "Weakened / rejected", "pt": "Enfraquecido"},
+    "evidence_lbl": {"en": "Evidence", "pt": "Evidência"},
+    "strength_lbl": {"en": "Evidence strength", "pt": "Força da evidência"},
+    "limitation_lbl": {"en": "What we cannot conclude", "pt": "O que não podemos concluir"},
+    "next_lbl": {"en": "Suggested next investigation", "pt": "Próxima investigação"},
+    "challenge_lbl": {"en": "Challenge this insight", "pt": "Desafiar esta descoberta"},
+    "dim_observed": {"en": "Observed", "pt": "Observado"},
+    "dim_association": {"en": "Association", "pt": "Associação"},
+    "dim_prediction": {"en": "Prediction", "pt": "Previsão"},
+    "dim_causal": {"en": "Causal", "pt": "Causal"},
+    "fp_title": {"en": "Risk fingerprints", "pt": "Perfis de risco"},
+    "fp_intro": {"en": "Sites clustered by their observed pathogen / faecal / ARG profile. A "
+                       "single composite score would blur these distinct shapes together.",
+                 "pt": "Locais agrupados pelo perfil observado de patógenos / fecais / ARG."},
     "cities": {"en": "Cities", "pt": "Cidades"},
     "sites": {"en": "Monitoring sites", "pt": "Locais monitorizados"},
     "with_labs": {"en": "Sites with lab risk data", "pt": "Locais com dados de risco"},

@@ -10,6 +10,9 @@ analyze:      ## Step 2: analysis, CV, fit model, figures
 	python scripts/run_analysis.py
 	python scripts/compare_models.py
 
+insights:     ## run the Insight Discovery Engine (discover -> challenge -> save)
+	python scripts/run_insights.py
+
 test:
 	python -m pytest tests/ -q
 

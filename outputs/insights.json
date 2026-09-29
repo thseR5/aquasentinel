@@ -1,0 +1,310 @@
+[
+  {
+    "id": "INS-FINGERPRINT",
+    "kind": "pattern",
+    "title": "High-risk sites split into 2 distinct risk fingerprints",
+    "finding": "Clustering the 96 sites by their observed pathogen/faecal/ARG profile reveals 2 groups with genuinely different risk shapes \u2014 a single composite score would blur these together.",
+    "evidence": {
+      "metric": "silhouette",
+      "value": 0.38,
+      "k": 2,
+      "n": 96,
+      "scope": "5 cities",
+      "permutation_p": 0.01
+    },
+    "strength": {
+      "observed": 4,
+      "association": 3,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Clusters describe observed risk composition only; they do not explain why a site has that profile, and k is chosen by silhouette, not theory.",
+    "next_step": "Profile each cluster against land-use and season with repeated sampling.",
+    "challenge": {
+      "survives": true,
+      "detail": "Permutation test: real silhouette 0.380 vs random 0.278 (95th pct 0.337); p=0.010. Structure is stronger than chance."
+    }
+  },
+  {
+    "id": "INS-ASSOC-01",
+    "kind": "association",
+    "title": "Vegetation fragmentation within 250 m tracks stream health risk",
+    "finding": "Across 96 sites, vegetation fragmentation within 250 m shows a positive rank association with composite risk (Spearman rho = +0.28).",
+    "evidence": {
+      "metric": "Spearman rho",
+      "value": 0.277,
+      "p": 0.0063,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 3,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Cross-sectional, single sample per site; association is not causation and effect sizes are small.",
+    "next_step": "Re-test with within-city controls and repeated seasonal sampling.",
+    "challenge": {
+      "survives": true,
+      "detail": "Within-city (city effect removed): rho = +0.18 (p=0.078); global rho = +0.28. Sign consistent in 5/5 cities. Association survives after controlling for city.",
+      "within_city_rho": 0.18,
+      "cities_consistent": "5/5"
+    }
+  },
+  {
+    "id": "INS-ASSOC-02",
+    "kind": "association",
+    "title": "Distance to wastewater stations tracks stream health risk",
+    "finding": "Across 96 sites, distance to wastewater stations shows a negative rank association with composite risk (Spearman rho = -0.22).",
+    "evidence": {
+      "metric": "Spearman rho",
+      "value": -0.224,
+      "p": 0.0281,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Cross-sectional, single sample per site; association is not causation and effect sizes are small.",
+    "next_step": "Re-test with within-city controls and repeated seasonal sampling.",
+    "challenge": {
+      "survives": true,
+      "detail": "Within-city (city effect removed): rho = -0.23 (p=0.021); global rho = -0.22. Sign consistent in 4/5 cities. Association survives after controlling for city.",
+      "within_city_rho": -0.235,
+      "cities_consistent": "4/5"
+    }
+  },
+  {
+    "id": "INS-ASSOC-05",
+    "kind": "association",
+    "title": "Landscape fragmentation within 1500 m tracks stream health risk",
+    "finding": "Across 96 sites, landscape fragmentation within 1500 m shows a negative rank association with composite risk (Spearman rho = -0.20).",
+    "evidence": {
+      "metric": "Spearman rho",
+      "value": -0.204,
+      "p": 0.0466,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Cross-sectional, single sample per site; association is not causation and effect sizes are small.",
+    "next_step": "Re-test with within-city controls and repeated seasonal sampling.",
+    "challenge": {
+      "survives": true,
+      "detail": "Within-city (city effect removed): rho = -0.25 (p=0.015); global rho = -0.20. Sign consistent in 3/5 cities. Association survives after controlling for city.",
+      "within_city_rho": -0.249,
+      "cities_consistent": "3/5"
+    }
+  },
+  {
+    "id": "INS-CONTRA-01",
+    "kind": "contradiction",
+    "title": "Composite score hides a dominant risk dimension at some sites",
+    "finding": "6 sites have one risk component at least 0.35 above their composite score \u2014 the average masks a substantially elevated dimension.",
+    "evidence": {
+      "metric": "max-minus-composite gap",
+      "threshold": 0.35,
+      "n_flagged": 6,
+      "n": 96,
+      "examples": [
+        "T17 (Toulouse): composite 0.53 but Fecal 1.00",
+        "T5 (Toulouse): composite 0.43 but Fecal 0.85",
+        "T10 (Toulouse): composite 0.23 but Arg 0.64",
+        "T12 (Toulouse): composite 0.26 but Arg 0.65",
+        "O14 (Oslo): composite 0.25 but Arg 0.60"
+      ]
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 0,
+      "causal": 0
+    },
+    "limitation": "Reflects how the composite is defined (mean of three components); descriptive.",
+    "next_step": "Report and triage by dominant component, not by composite alone.",
+    "challenge": {
+      "survives": true,
+      "detail": "Arithmetic fact about the observed components, not a modelled claim \u2014 robust by construction."
+    }
+  },
+  {
+    "id": "INS-OUTLIER-01",
+    "kind": "outlier",
+    "title": "A few sites stand well above their own city's norm",
+    "finding": "9 sites sit at least 1.5 standard deviations above their city's mean composite risk \u2014 local hotspots worth first inspection.",
+    "evidence": {
+      "metric": "within-city z-score",
+      "threshold": 1.5,
+      "n_flagged": 9,
+      "examples": [
+        "C5 (Coimbra): +2.6 SD above its city mean (composite 0.78)",
+        "BN2 (Benevento): +2.6 SD above its city mean (composite 0.73)",
+        "G9 (Ghent): +2.4 SD above its city mean (composite 0.36)",
+        "O17 (Oslo): +1.9 SD above its city mean (composite 0.42)",
+        "BN10 (Benevento): +1.9 SD above its city mean (composite 0.62)"
+      ],
+      "n": 96
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Based on one sample per site; an outlier may reflect sampling, not a trend.",
+    "next_step": "Re-sample flagged sites and their upstream/downstream neighbours.",
+    "challenge": {
+      "survives": true,
+      "detail": "Descriptive within-city ranking; not a cross-city or predictive claim."
+    }
+  },
+  {
+    "id": "INS-CITIZEN-01",
+    "kind": "coverage",
+    "title": "Most citizen submissions need review before they can be trusted",
+    "finding": "56 of 71 citizen submissions (79%) are flagged: 10 junk names, 19 duplicates, 1 swapped coordinates, 30 out of region.",
+    "evidence": {
+      "metric": "flagged share",
+      "value": 78.9,
+      "n": 71,
+      "breakdown": {
+        "n_total": 71,
+        "n_ok": 15,
+        "n_review": 56,
+        "junk_name": 10,
+        "likely_swapped": 1,
+        "invalid_coords": 0,
+        "duplicate": 19,
+        "out_of_region": 30
+      }
+    },
+    "strength": {
+      "observed": 4,
+      "association": 0,
+      "prediction": 0,
+      "causal": 0
+    },
+    "limitation": "Swap detection only catches swaps that land in a partner country; other swaps show as out-of-region.",
+    "next_step": "Prompt citizens to confirm flagged coordinates and merge duplicate points at capture time.",
+    "challenge": {
+      "survives": true,
+      "detail": "Deterministic rule outcomes on the actual submissions \u2014 fully reproducible."
+    }
+  },
+  {
+    "id": "INS-CITY-01",
+    "kind": "cross-city",
+    "title": "Composite risk differs significantly across cities",
+    "finding": "City ranking by mean composite risk: Benevento (0.34) > Coimbra (0.33) > Toulouse (0.31) > Oslo (0.28) > Ghent (0.23).",
+    "evidence": {
+      "metric": "Kruskal-Wallis H",
+      "value": 9.05,
+      "p": 0.0599,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 3,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "City differences may reflect sampling protocol, season or land-use, not water quality alone.",
+    "next_step": "Model with a city random effect before comparing environmental drivers across cities.",
+    "challenge": {
+      "survives": false,
+      "detail": "Kruskal-Wallis p=0.060. Not clearly beyond chance."
+    }
+  },
+  {
+    "id": "INS-ASSOC-03",
+    "kind": "association",
+    "title": "Distance to crop fields tracks stream health risk",
+    "finding": "Across 96 sites, distance to crop fields shows a negative rank association with composite risk (Spearman rho = -0.22).",
+    "evidence": {
+      "metric": "Spearman rho",
+      "value": -0.223,
+      "p": 0.0291,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Cross-sectional, single sample per site; association is not causation and effect sizes are small.",
+    "next_step": "Re-test with within-city controls and repeated seasonal sampling.",
+    "challenge": {
+      "survives": false,
+      "detail": "Within-city (city effect removed): rho = -0.06 (p=0.535); global rho = -0.22. Sign consistent in 3/5 cities. Association largely reflects differences BETWEEN cities, not within them \u2014 weakened.",
+      "within_city_rho": -0.064,
+      "cities_consistent": "3/5"
+    }
+  },
+  {
+    "id": "INS-ASSOC-04",
+    "kind": "association",
+    "title": "Distance to hospitals tracks stream health risk",
+    "finding": "Across 96 sites, distance to hospitals shows a negative rank association with composite risk (Spearman rho = -0.21).",
+    "evidence": {
+      "metric": "Spearman rho",
+      "value": -0.212,
+      "p": 0.0378,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Cross-sectional, single sample per site; association is not causation and effect sizes are small.",
+    "next_step": "Re-test with within-city controls and repeated seasonal sampling.",
+    "challenge": {
+      "survives": false,
+      "detail": "Within-city (city effect removed): rho = -0.06 (p=0.585); global rho = -0.21. Sign consistent in 3/5 cities. Association largely reflects differences BETWEEN cities, not within them \u2014 weakened.",
+      "within_city_rho": -0.056,
+      "cities_consistent": "3/5"
+    }
+  },
+  {
+    "id": "INS-ASSOC-06",
+    "kind": "association",
+    "title": "Vegetation fragmentation within 500 m tracks stream health risk",
+    "finding": "Across 96 sites, vegetation fragmentation within 500 m shows a positive rank association with composite risk (Spearman rho = +0.20).",
+    "evidence": {
+      "metric": "Spearman rho",
+      "value": 0.199,
+      "p": 0.0515,
+      "n": 96,
+      "scope": "5 cities"
+    },
+    "strength": {
+      "observed": 4,
+      "association": 2,
+      "prediction": 1,
+      "causal": 0
+    },
+    "limitation": "Cross-sectional, single sample per site; association is not causation and effect sizes are small.",
+    "next_step": "Re-test with within-city controls and repeated seasonal sampling.",
+    "challenge": {
+      "survives": false,
+      "detail": "Within-city (city effect removed): rho = +0.01 (p=0.940); global rho = +0.20. Sign consistent in 3/5 cities. Association largely reflects differences BETWEEN cities, not within them \u2014 weakened.",
+      "within_city_rho": 0.008,
+      "cities_consistent": "3/5"
+    }
+  }
+]

@@ -1,7 +1,8 @@
-"""AquaSentinel — One Health early-warning & insight platform for urban streams.
+"""AquaSentinel — Evidence-first environmental intelligence for urban streams.
 
-Single-file Streamlit app (robust for one-command deploy). Sections mirror the
-feature priority list. Every screen states what the data can and cannot support.
+Single-file Streamlit app (robust for one-command deploy). The front door is the
+Insight Feed: discovered patterns that survived a statistical challenge. Every
+screen states what the data can and cannot support.
 
 Run:  streamlit run app/app.py
 """
@@ -17,8 +18,9 @@ import streamlit as st
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from aquasentinel import data, features, quality, explain, RISK_COMPONENTS, COMPOSITE  # noqa: E402
+from aquasentinel import data, features, quality, explain, insights, RISK_COMPONENTS, COMPOSITE  # noqa: E402
 from aquasentinel.i18n import t, LANGS  # noqa: E402
+from aquasentinel.insights import STRENGTH_LEVELS  # noqa: E402
 
 import joblib  # noqa: E402
 
@@ -36,6 +38,21 @@ def load_all():
     feat_df, feat_names = features.build_feature_matrix(df)
     df["composite_obs"] = df[RISK_COMPONENTS].mean(axis=1)
     return df, feat_df, feat_names
+
+
+@st.cache_data(show_spinner="Discovering insights…")
+def discover():
+    """Run the Insight Discovery Engine once and cache the result."""
+    df = data.build_analysis_table()
+    df["composite_obs"] = df[RISK_COMPONENTS].mean(axis=1)
+    feat_df, names = features.build_feature_matrix(df)
+    # Merge risk targets ONTO the feature frame so feature columns keep canonical
+    # names (merging the other way collides with df's raw buffer columns -> _x/_y).
+    merged = feat_df.merge(df[["siteCode"] + RISK_COMPONENTS], on="siteCode", how="left")
+    q = quality.validate_submissions(data.load_user_generated())
+    ins = insights.discover_all(merged, names, data.load_user_generated(), q.summary)
+    lab, profiles, _ = insights.risk_fingerprints(df)
+    return [i.to_dict() for i in ins], lab, profiles
 
 
 @st.cache_resource(show_spinner="Preparing risk model…")
@@ -89,13 +106,103 @@ st.sidebar.title("AquaSentinel")
 lang = st.sidebar.selectbox("Language / Idioma", list(LANGS.keys()),
                             format_func=lambda k: LANGS[k])
 section = st.sidebar.radio(t("nav", lang), [
-    t("overview", lang), t("map", lang), t("health_card", lang),
-    t("drivers", lang), t("scenario", lang), t("copilot", lang),
-    t("quality", lang), t("about", lang),
+    t("insight_feed", lang), t("fingerprints", lang), t("map", lang),
+    t("health_card", lang), t("drivers", lang), t("scenario", lang),
+    t("copilot", lang), t("quality", lang), t("overview", lang), t("about", lang),
 ])
 st.sidebar.caption(t("disclaimer", lang))
 
 labelled = df.dropna(subset=RISK_COMPONENTS)
+
+
+# ------------------------------------------------------------------ Insight feed
+def _bar(level: int) -> str:
+    return "█" * level + "░" * (4 - level)
+
+
+def render_evidence_card(ins: dict):
+    """Render one Insight as an Evidence Card."""
+    survived = ins["challenge"].get("survives", False)
+    badge = f":green[● {t('survived', lang)}]" if survived else f":orange[▲ {t('weakened', lang)}]"
+    with st.container(border=True):
+        st.markdown(f"**{ins['title']}**  \n{badge} · `{ins['id']}` · {ins['kind']}")
+        st.write(ins["finding"])
+        ev = ins["evidence"]
+        bits = []
+        if "value" in ev:
+            bits.append(f"{ev['metric']} = **{ev['value']}**")
+        if ev.get("p") is not None and "p" in ev:
+            bits.append(f"p = {ev['p']}")
+        if ev.get("n"):
+            bits.append(f"n = {ev['n']}")
+        if ev.get("scope"):
+            bits.append(str(ev["scope"]))
+        if ev.get("n_flagged") is not None:
+            bits.append(f"{ev['n_flagged']} sites flagged")
+        st.caption(f"**{t('evidence_lbl', lang)}:** " + " · ".join(bits))
+        # examples if present
+        for exlist in (ev.get("examples"), ev.get("breakdown") and None):
+            if exlist:
+                for e in exlist[:4]:
+                    st.markdown(f"   - {e}")
+        # strength bars
+        s = ins["strength"]
+        cols = st.columns(4)
+        for col, key, dim in zip(cols, ["observed", "association", "prediction", "causal"],
+                                 ["dim_observed", "dim_association", "dim_prediction", "dim_causal"]):
+            col.markdown(f"{t(dim, lang)}  \n`{_bar(s[key])}` {STRENGTH_LEVELS[s[key]]}")
+        st.markdown(f"**{t('limitation_lbl', lang)}:** {ins['limitation']}")
+        st.markdown(f"**{t('next_lbl', lang)}:** {ins['next_step']}")
+        with st.expander(t("challenge_lbl", lang)):
+            st.write(ins["challenge"].get("detail", ""))
+
+
+def page_insight_feed():
+    st.title(t("feed_title", lang))
+    st.markdown(t("feed_intro", lang))
+    ins_list, _, _ = discover()
+    n_surv = sum(i["challenge"].get("survives") for i in ins_list)
+    c = st.columns(4)
+    c[0].metric(t("survived", lang), n_surv)
+    c[1].metric(t("weakened", lang), len(ins_list) - n_surv)
+    c[2].metric(t("sites", lang), len(df))
+    c[3].metric(t("with_labs", lang), len(labelled))
+    kinds = sorted({i["kind"] for i in ins_list})
+    pick = st.multiselect("Filter by kind", kinds, default=kinds)
+    for ins in ins_list:
+        if ins["kind"] in pick:
+            render_evidence_card(ins)
+
+
+# ------------------------------------------------------------------ Risk fingerprints
+def page_fingerprints():
+    st.title(t("fp_title", lang))
+    st.markdown(t("fp_intro", lang))
+    _, lab, profiles = discover()
+    cols = st.columns(len(profiles))
+    for col, (cid, p) in zip(cols, profiles.items()):
+        with col:
+            st.markdown(f"**Pattern {chr(65+cid)}** · {p['label']}")
+            st.caption(f"{p['n']} sites")
+            for comp in RISK_COMPONENTS:
+                nm = comp.replace("scaled", "").replace("Risk", "")
+                v = p["means"][comp]
+                st.markdown(f"{nm}  \n`{_bar(int(round(v*4)))}` {v:.2f}")
+            st.caption("e.g. " + ", ".join(p["examples"]))
+            st.caption("cities: " + ", ".join(f"{k} {v}" for k, v in p["cities"].items()))
+    # scatter of the two dominant components coloured by cluster
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(6, 5))
+    palette = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02"]
+    for cid in sorted(lab["cluster"].unique()):
+        sub = lab[lab["cluster"] == cid]
+        ax.scatter(sub["scaledPathogenRisk"], sub["scaledFecalRisk"],
+                   c=palette[cid % len(palette)], label=f"Pattern {chr(65+cid)}", s=40, alpha=0.8)
+    ax.set_xlabel("Pathogen risk"); ax.set_ylabel("Faecal risk")
+    ax.set_title("Risk fingerprints (observed profiles)"); ax.legend()
+    st.pyplot(fig)
 
 
 # ------------------------------------------------------------------ Overview
@@ -395,6 +502,7 @@ def page_about():
 
 
 PAGES = {
+    t("insight_feed", lang): page_insight_feed, t("fingerprints", lang): page_fingerprints,
     t("overview", lang): page_overview, t("map", lang): page_map,
     t("health_card", lang): page_health_card, t("drivers", lang): page_drivers,
     t("scenario", lang): page_scenario, t("copilot", lang): page_copilot,
