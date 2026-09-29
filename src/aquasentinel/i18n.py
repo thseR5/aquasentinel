@@ -101,9 +101,9 @@ _STR = {
     "base_risk": {"en": "Current estimate", "pt": "Estimativa atual"},
     "scenario_risk": {"en": "Scenario estimate", "pt": "Estimativa do cenário"},
     "alert_fire": {
-        "en": "⚠️ ALERT: scenario risk exceeds the {city} 80th-percentile threshold ({thr}). "
+        "en": "ALERT: scenario risk exceeds the {city} 80th-percentile threshold ({thr}). "
               "A city officer would be notified to prioritise inspection.",
-        "pt": "⚠️ ALERTA: risco do cenário acima do limiar de {city} ({thr}).",
+        "pt": "ALERTA: risco do cenário acima do limiar de {city} ({thr}).",
     },
     "alert_ok": {"en": "No alert: scenario risk stays below the {city} 80th-percentile ({thr}).",
                  "pt": "Sem alerta: abaixo do limiar de {city} ({thr})."},

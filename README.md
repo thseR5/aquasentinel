@@ -1,4 +1,4 @@
-# 💧 AquaSentinel
+# AquaSentinel
 
 **A One Health early-warning & insight platform for urban streams.**
 *Healthy waters, healthy ecosystems, healthy communities.*

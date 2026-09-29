@@ -22,7 +22,7 @@ from aquasentinel.i18n import t, LANGS  # noqa: E402
 
 import joblib  # noqa: E402
 
-st.set_page_config(page_title="AquaSentinel", page_icon="💧", layout="wide")
+st.set_page_config(page_title="AquaSentinel", layout="wide")
 
 # Colour-blind-safe risk palette (low->high).
 RISK_COLORS = ["#2c7bb6", "#abd9e9", "#ffffbf", "#fdae61", "#d7191c"]
@@ -85,7 +85,7 @@ df, feat_df, feat_names = load_all()
 model = load_model()
 
 # ------------------------------------------------------------------ sidebar
-st.sidebar.title("💧 AquaSentinel")
+st.sidebar.title("AquaSentinel")
 lang = st.sidebar.selectbox("Language / Idioma", list(LANGS.keys()),
                             format_func=lambda k: LANGS[k])
 section = st.sidebar.radio(t("nav", lang), [
