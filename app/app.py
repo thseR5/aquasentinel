@@ -130,8 +130,9 @@ def page_map():
     dd = df.dropna(subset=[layer]).copy()
     st.caption(f"{len(dd)} sites with values for **{layer}**.")
 
+    # OpenStreetMap tiles are free and need no API key (CARTO basemaps now require one).
     m = folium.Map(location=[dd["latitude"].mean(), dd["longitude"].mean()],
-                   zoom_start=5, tiles="cartodbpositron")
+                   zoom_start=5, tiles="OpenStreetMap")
     vmax = dd[layer].quantile(0.98) if layer == "nitrate_mgL" else 1.0
     for _, r in dd.iterrows():
         v = r[layer]
