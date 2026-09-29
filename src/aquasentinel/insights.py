@@ -231,6 +231,55 @@ def composite_contradictions(df: pd.DataFrame, gap: float = 0.35) -> list[Insigh
 
 
 # --------------------------------------------------------------------------- #
+#  3b. Surprising sites — high risk the surviving patterns do NOT explain
+# --------------------------------------------------------------------------- #
+def surprising_sites(df: pd.DataFrame) -> list[Insight]:
+    """Sites with high observed risk but a benign environment on the drivers that
+    survived the challenge (low vegetation fragmentation AND far from wastewater).
+
+    These break the trusted associations, so they are the strongest *investigation
+    candidates*: the known environmental story does not explain their risk.
+    """
+    need = ["patchDensityVeg250m", "log_distanceToSewageStations"]
+    if not all(c in df.columns for c in need):
+        return []
+    lab = df.dropna(subset=RISK_COMPONENTS + need).copy()
+    if len(lab) < 20:
+        return []
+    lab["_comp"] = lab[RISK_COMPONENTS].mean(axis=1)
+    frag_pct = lab["patchDensityVeg250m"].rank(pct=True)
+    dist_pct = lab["log_distanceToSewageStations"].rank(pct=True)
+    hi = lab["_comp"] >= lab["_comp"].quantile(0.66)
+    benign = (frag_pct <= 0.5) & (dist_pct >= 0.5)   # low fragmentation AND far from sewage
+    flagged = lab[hi & benign].sort_values("_comp", ascending=False)
+    if flagged.empty:
+        return []
+    ex = [f"{r['siteCode']} ({r['city_name']}): composite {r['_comp']:.2f}, "
+          f"{r['patchDensityVeg250m']:.1f} fragmentation, "
+          f"{np.expm1(r['log_distanceToSewageStations'])/1000:.1f} km from wastewater"
+          for _, r in flagged.head(5).iterrows()]
+    return [Insight(
+        id="INS-SURPRISE-01",
+        kind="surprising",
+        title="Some high-risk sites are NOT explained by the trusted patterns",
+        finding=(f"{len(flagged)} high-risk sites have a benign environment on both patterns that "
+                 f"survived the challenge — low vegetation fragmentation and far from wastewater. "
+                 f"The known environmental story does not account for their risk."),
+        evidence={"metric": "high risk + benign environment", "n_flagged": int(len(flagged)),
+                  "n": int(len(lab)), "examples": ex},
+        strength={"observed": 4, "association": 1, "prediction": 0, "causal": 0},
+        limitation="A single sample per site; the mismatch could be sampling noise or an "
+                   "unmeasured local source (e.g. upstream discharge).",
+        next_step="Prioritise these for repeat sampling and an upstream source search — they are "
+                  "where the environmental model is least able to help.",
+        challenge={"survives": True,
+                   "detail": ("These sites are defined by breaking the surviving associations, so "
+                              "they are hypothesis-generating investigation candidates, not a "
+                              "predictive claim. Robust as a flag; the cause is unknown.")},
+    )]
+
+
+# --------------------------------------------------------------------------- #
 #  4. Outliers — sites unusual within their city
 # --------------------------------------------------------------------------- #
 def outliers(df: pd.DataFrame, z: float = 1.5) -> list[Insight]:
@@ -321,6 +370,7 @@ def discover_all(df: pd.DataFrame, feature_names: list[str],
     _, _, fp = risk_fingerprints(df)
     out.append(fp)
     out += associations(df, feature_names)
+    out += surprising_sites(df)
     out += composite_contradictions(df)
     out += outliers(df)
     out += cross_city(df)

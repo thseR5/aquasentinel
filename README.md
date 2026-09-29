@@ -24,7 +24,9 @@ question a researcher really has.
 ## What it does
 1. **Insight Discovery Engine** — automatically searches the network for patterns,
    associations, contradictions, outliers, cross-city differences and coverage gaps.
-   **11 insights discovered, 7 survive the challenge.**
+   **12 insights discovered, 8 survive the challenge.** It even flags high-risk sites
+   the trusted patterns *cannot* explain (e.g. BN15, 11.7 km from any wastewater
+   station) as investigation candidates.
 2. **"Challenge this insight"** — each finding is re-tested by removing city structure
    (within-city analysis) and a permutation test. Confounded findings are *rejected*:
    e.g. "distance to crop fields" (global ρ=−0.22) **collapses to ρ=−0.06 within city**

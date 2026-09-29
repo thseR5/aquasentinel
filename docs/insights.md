@@ -41,6 +41,7 @@ hidden: prediction and causal are low by design.
 | Distance to wastewater ↔ risk | ρ = −0.22, p = 0.028 | **Survives** — within-city ρ = −0.23, p = 0.021, 4/5 cities |
 | Composite hides a dominant dimension | arithmetic on components | **Survives** — robust by construction |
 | Within-city outlier hotspots | within-city z ≥ 1.5 | **Survives** — descriptive |
+| High-risk sites the patterns can't explain (e.g. BN15) | high risk + benign environment | **Survives** as an investigation flag (cause unknown) |
 | 79% of citizen entries need review | 56/71 flagged | **Survives** — deterministic |
 | Distance to crop fields ↔ risk | ρ = −0.22, p = 0.029 | **Weakened** — within-city ρ = −0.06 (city-confounded) |
 | Distance to hospitals ↔ risk | ρ = −0.21, p = 0.038 | **Weakened** — within-city ρ = −0.06 |

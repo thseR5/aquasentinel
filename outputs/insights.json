@@ -169,6 +169,34 @@
     }
   },
   {
+    "id": "INS-SURPRISE-01",
+    "kind": "surprising",
+    "title": "Some high-risk sites are NOT explained by the trusted patterns",
+    "finding": "3 high-risk sites have a benign environment on both patterns that survived the challenge \u2014 low vegetation fragmentation and far from wastewater. The known environmental story does not account for their risk.",
+    "evidence": {
+      "metric": "high risk + benign environment",
+      "n_flagged": 3,
+      "n": 96,
+      "examples": [
+        "BN4 (Benevento): composite 0.38, 0.1 fragmentation, 6.7 km from wastewater",
+        "BN15 (Benevento): composite 0.37, 0.0 fragmentation, 11.7 km from wastewater",
+        "T6 (Toulouse): composite 0.36, 0.2 fragmentation, 5.4 km from wastewater"
+      ]
+    },
+    "strength": {
+      "observed": 4,
+      "association": 1,
+      "prediction": 0,
+      "causal": 0
+    },
+    "limitation": "A single sample per site; the mismatch could be sampling noise or an unmeasured local source (e.g. upstream discharge).",
+    "next_step": "Prioritise these for repeat sampling and an upstream source search \u2014 they are where the environmental model is least able to help.",
+    "challenge": {
+      "survives": true,
+      "detail": "These sites are defined by breaking the surviving associations, so they are hypothesis-generating investigation candidates, not a predictive claim. Robust as a flag; the cause is unknown."
+    }
+  },
+  {
     "id": "INS-CITIZEN-01",
     "kind": "coverage",
     "title": "Most citizen submissions need review before they can be trusted",

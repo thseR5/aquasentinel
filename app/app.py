@@ -105,11 +105,17 @@ model = load_model()
 st.sidebar.title("AquaSentinel")
 lang = st.sidebar.selectbox("Language / Idioma", list(LANGS.keys()),
                             format_func=lambda k: LANGS[k])
-section = st.sidebar.radio(t("nav", lang), [
-    t("insight_feed", lang), t("fingerprints", lang), t("map", lang),
-    t("health_card", lang), t("drivers", lang), t("scenario", lang),
-    t("copilot", lang), t("quality", lang), t("overview", lang), t("about", lang),
-])
+mode = st.sidebar.radio(t("nav", lang), [t("mode_insights", lang), t("mode_explore", lang)])
+if mode == t("mode_insights", lang):
+    section = st.sidebar.radio(" ", [t("insight_feed", lang), t("fingerprints", lang)],
+                               label_visibility="collapsed")
+else:
+    st.sidebar.caption(t("explore_hint", lang))
+    section = st.sidebar.selectbox(t("explore_pick", lang), [
+        t("map", lang), t("health_card", lang), t("drivers", lang),
+        t("scenario", lang), t("copilot", lang), t("quality", lang),
+        t("overview", lang), t("about", lang),
+    ])
 st.sidebar.caption(t("disclaimer", lang))
 
 labelled = df.dropna(subset=RISK_COMPONENTS)

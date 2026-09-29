@@ -8,7 +8,11 @@ from __future__ import annotations
 LANGS = {"en": "English", "pt": "Português"}
 
 _STR = {
-    "nav": {"en": "Section", "pt": "Secção"},
+    "nav": {"en": "View", "pt": "Vista"},
+    "mode_insights": {"en": "Insights", "pt": "Descobertas"},
+    "mode_explore": {"en": "Explore (technical depth)", "pt": "Explorar (detalhe técnico)"},
+    "explore_hint": {"en": "Supporting tools behind the insights.", "pt": "Ferramentas de apoio."},
+    "explore_pick": {"en": "Tool", "pt": "Ferramenta"},
     "insight_feed": {"en": "Insight feed", "pt": "Descobertas"},
     "fingerprints": {"en": "Risk fingerprints", "pt": "Perfis de risco"},
     "overview": {"en": "Overview", "pt": "Visão geral"},
