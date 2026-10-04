@@ -1,6 +1,6 @@
-"""AquaSentinel: One Health early-warning and insight platform for urban streams."""
+"""AquaSentinel: Evidence Before Action — tested insights for urban stream health."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 # Composite risk components (health_risks.csv). The composite healthRiskScore is
 # the mean of these three; we always model the three components as the real targets.

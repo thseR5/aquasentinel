@@ -1,88 +1,120 @@
 {
   "scaledPathogenRisk": {
     "loco": {
-      "mae": 0.15128620754233055,
-      "spearman": 0.3992619739524943,
-      "n": 96
+      "mae": 0.1597677500513013,
+      "n": 96,
+      "per_city_spearman": {
+        "Coimbra": 0.27554179566563464,
+        "Ghent": -0.07352941176470588,
+        "Benevento": 0.6436090225563909,
+        "Toulouse": 0.1734893153764171,
+        "Oslo": -0.36521125754312195
+      },
+      "mean_city_spearman": 0.13077989285812297,
+      "pooled_spearman": 0.40014381116708886
     },
     "loco_baseline": {
       "mae": 0.14805937977673003,
-      "spearman": -0.47022288307442894,
+      "spearman": NaN,
       "n": 96
     },
     "kfold": {
-      "mae": 0.13801647638811562,
-      "spearman": 0.273776538315681,
+      "mae": 0.13753284356386644,
+      "spearman": 0.2634658262681132,
       "n": 96
     },
     "kfold_baseline": {
       "mae": 0.14027828164160402,
-      "spearman": -0.25338382041661556,
+      "spearman": NaN,
       "n": 96
     }
   },
   "scaledFecalRisk": {
     "loco": {
-      "mae": 0.156136152540967,
-      "spearman": -0.09086821406891517,
-      "n": 96
+      "mae": 0.15670788342957293,
+      "n": 96,
+      "per_city_spearman": {
+        "Coimbra": 0.17440660474716205,
+        "Ghent": -0.10294117647058824,
+        "Benevento": null,
+        "Toulouse": 0.024675324675324677,
+        "Oslo": 0.037593984962406006
+      },
+      "mean_city_spearman": 0.03343368447857612,
+      "pooled_spearman": -0.09458143118427537
     },
     "loco_baseline": {
       "mae": 0.15338219090513733,
-      "spearman": -0.32848851195021,
+      "spearman": NaN,
       "n": 96
     },
     "kfold": {
-      "mae": 0.14884320872302667,
-      "spearman": -0.10278435824919749,
+      "mae": 0.14863425931575694,
+      "spearman": -0.1137009640764231,
       "n": 96
     },
     "kfold_baseline": {
       "mae": 0.14750833902939167,
-      "spearman": -0.16711372522547668,
+      "spearman": NaN,
       "n": 96
     }
   },
   "scaledArgRisk": {
     "loco": {
-      "mae": 0.12881534441492773,
-      "spearman": -0.32809829957109043,
-      "n": 96
+      "mae": 0.1287403144249706,
+      "n": 96,
+      "per_city_spearman": {
+        "Coimbra": -0.05056759545923632,
+        "Ghent": null,
+        "Benevento": null,
+        "Toulouse": null,
+        "Oslo": null
+      },
+      "mean_city_spearman": -0.05056759545923632,
+      "pooled_spearman": -0.3278498683375185
     },
     "loco_baseline": {
       "mae": 0.12763104679181114,
-      "spearman": -0.35440096850859454,
+      "spearman": NaN,
       "n": 96
     },
     "kfold": {
-      "mae": 0.12402752795502385,
-      "spearman": 0.07566663762160604,
+      "mae": 0.12370544551550348,
+      "spearman": 0.0713294066160303,
       "n": 96
     },
     "kfold_baseline": {
       "mae": 0.1249264475108225,
-      "spearman": -0.17224359732376252,
+      "spearman": NaN,
       "n": 96
     }
   },
   "composite": {
     "loco": {
-      "mae": 0.10412910596254825,
-      "spearman": 0.28182311448724906,
-      "n": 96
+      "mae": 0.10724202566929626,
+      "n": 96,
+      "per_city_spearman": {
+        "Coimbra": 0.45304437564499483,
+        "Ghent": -0.15441176470588236,
+        "Benevento": 0.6345864661654135,
+        "Toulouse": 0.2025974025974026,
+        "Oslo": -0.12030075187969923
+      },
+      "mean_city_spearman": 0.20310314556444586,
+      "pooled_spearman": 0.288293543136191
     },
     "loco_baseline": {
-      "mae": 0.1001816189236111,
+      "mae": 0.10344959182767044,
       "spearman": NaN,
       "n": 96
     },
     "kfold": {
-      "mae": 0.1040244161650351,
-      "spearman": 0.019858925664677157,
+      "mae": 0.10361820352611573,
+      "spearman": 0.01935702658708627,
       "n": 96
     },
     "kfold_baseline": {
-      "mae": 0.1001816189236111,
+      "mae": 0.10088594711209842,
       "spearman": NaN,
       "n": 96
     }

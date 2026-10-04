@@ -46,7 +46,7 @@ from aquasentinel import data, RISK_COMPONENTS  # noqa: E402
 
 app = FastAPI(
     title="AquaSentinel Interoperability API",
-    version="0.1.0",
+    version="0.2.0",
     description="OGC SensorThings- and HL7 FHIR-aligned access to urban stream health data.",
 )
 
@@ -69,8 +69,52 @@ def root():
         "service": "AquaSentinel Interoperability API",
         "standards": ["OGC SensorThings v1.1 (shaped)", "GeoJSON", "HL7 FHIR R4 Observation"],
         "endpoints": ["/v1.1/Things", "/v1.1/Observations", "/geojson/sites",
-                      "/fhir/Observation/{siteCode}", "/data-dictionary"],
+                      "/fhir/Observation/{siteCode}", "/insights", "/plan", "/citizen/quality",
+                      "/data-dictionary"],
     }
+
+
+@app.get("/insights")
+def insights_feed(status: str | None = None):
+    """Every insight with its evidence and verdict (supported / exploratory / rejected).
+
+    Served from outputs/insights.json, which `make insights` regenerates from the raw
+    data. Filter with ?status=supported."""
+    import json
+    path = ROOT / "outputs" / "insights.json"
+    if not path.exists():
+        raise HTTPException(503, "Run `make insights` to generate outputs/insights.json")
+    payload = json.load(open(path))
+    items = payload["insights"]
+    if status:
+        items = [i for i in items if i["challenge"]["status"] == status]
+    return clean({"counts": payload["counts"], "value": items, "@iot.count": len(items)})
+
+
+@app.get("/plan")
+def campaign_plan():
+    """The next sampling campaign: sites to re-sample (with the insights each one tests)
+    and, per insight, how many sites it would take to change the verdict."""
+    import json
+    from aquasentinel import planning
+    path = ROOT / "outputs" / "insights.json"
+    if not path.exists():
+        raise HTTPException(503, "Run `make insights` to generate outputs/insights.json")
+    ins = json.load(open(path))["insights"]
+    plan = planning.resample_plan(_df(), ins)
+    plan["samplingDate"] = plan["samplingDate"].astype(str).str[:10]
+    return clean({"evidence_gaps": planning.evidence_gaps(ins),
+                  "value": plan.to_dict(orient="records"), "@iot.count": len(plan)})
+
+
+@app.get("/citizen/quality")
+def citizen_quality():
+    """Citizen site registrations with the flags, notes and suggested fix for each."""
+    from aquasentinel import quality
+    res = quality.validate_submissions(data.load_user_generated(),
+                                       reference=data.research_points())
+    rows = res.df.drop(columns=["altitude"], errors="ignore").to_dict(orient="records")
+    return clean({"summary": res.summary, "value": rows})
 
 
 @app.get("/v1.1/Things")

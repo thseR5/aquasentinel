@@ -1,4 +1,4 @@
-.PHONY: install profile analyze test app api run all clean
+.PHONY: install profile analyze insights test app api run all clean
 
 install:
 	pip install -r requirements.txt
@@ -22,9 +22,9 @@ app:          ## launch the Streamlit dashboard
 api:          ## launch the interoperability API
 	uvicorn api.main:app --reload --port 8000
 
-run: profile analyze app   ## one command: rebuild everything then open the app
+run: profile analyze insights app   ## one command: rebuild everything then open the app
 
-all: install profile analyze test
+all: install profile analyze insights test
 
 clean:
 	rm -rf outputs/figures/*.png outputs/*.json outputs/*.csv outputs/model.joblib

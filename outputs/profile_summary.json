@@ -54,12 +54,13 @@
   },
   "citizen_quality": {
     "n_total": 71,
-    "n_ok": 15,
-    "n_review": 56,
+    "n_ok": 41,
+    "n_review": 30,
     "junk_name": 10,
-    "likely_swapped": 1,
+    "likely_swapped": 3,
     "invalid_coords": 0,
     "duplicate": 19,
-    "out_of_region": 30
+    "duplicate_clusters": 5,
+    "outside_coverage": 39
   }
 }

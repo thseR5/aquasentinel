@@ -1,78 +1,77 @@
-# Model card — AquaSentinel stream health-risk estimator
+# Model card — landscape model
 
-## Overview
-A regularized linear model that estimates the three OneAquaHealth stream
-health-risk components (pathogen, faecal, ARG) from landscape and climate context,
-with distribution-free prediction intervals. Built for **screening and
-prioritisation**, explicitly **not** for diagnosis or absolute prediction.
+## What it is, and what it is not
+A regularised linear model that relates the three OneAquaHealth risk components
+(pathogen, faecal, ARG) to landscape and climate context. It was built to test one
+question: **can landscape data predict stream health risk at a site that has not been
+sampled?** On this data the answer is no. The model is therefore used only to show
+exploratory landscape context on the site health card. AquaSentinel does not forecast
+risk and does not rank unsampled sites.
 
 ## Data
-- 96 monitoring sites with lab risk targets, across 5 EU cities.
-- Features: 5 log-transformed distances, 48 landscape-buffer features (6 families ×
-  8 radii), 4 climate summaries, nitrate, altitude → 59 features.
-- **Cross-sectional snapshot** (one sample per site, 2023). No temporal dimension.
+- 96 monitoring sites with lab risk values, in 5 cities.
+- 59 features: 5 log-transformed distances, 48 landscape-buffer features (6 families ×
+  8 radii from 50 m to 2 km), 4 climate summaries, nitrate, altitude.
+- A snapshot: one sample per site, each city sampled in a single campaign between May
+  and September 2023.
 
 ## Method
-- **Estimator:** `ElasticNetCV` (impute median → standardize → elastic-net with
-  inner 5-fold CV over `l1_ratio ∈ {0.2,0.5,0.9,1.0}`). Elastic-net chosen for
-  interpretability and its L2 grouping of collinear buffer families.
-- **Targets:** the three risk components; composite = mean of component predictions.
-- **Uncertainty:** split-conformal intervals (80%); calibration on a 24-site
-  held-out split. Half-widths ≈ 0.21 (pathogen), 0.33 (faecal), 0.23 (ARG) on the
-  0–1 scale — deliberately wide, reflecting real predictive limits.
-- **Explanation:** standardized coefficient × standardized feature value per site,
-  surfaced as plain-language drivers.
+- `ElasticNetCV`: median imputation → standardisation → elastic-net, with inner 5-fold
+  cross-validation over the penalty and `l1_ratio ∈ {0.2, 0.5, 0.9, 1.0}`.
+- One model per component. The composite estimate is the mean of the three.
+- Explanation: standardised coefficient × standardised feature value per site.
+- Intervals: split-conformal, 80%, calibrated on 24 held-out sites. They are valid for
+  sites exchangeable with those 96, not for a new city.
 
 ## Validation
-Two schemes, both against a **city-mean / global-mean baseline**:
-- **Leave-one-city-out (LOCO)** — the real question: does it transfer to a new city?
-- **Random 5-fold** — within-distribution performance.
+**Leave-one-city-out**: train on four cities, test on the fifth. The baseline predicts
+the mean of the four training cities, so it never sees the held-out city either.
 
-| Target | LOCO MAE | Baseline MAE | Beats baseline (MAE)? | LOCO Spearman | K-fold Spearman |
-|---|---|---|---|---|---|
-| Pathogen | 0.151 | 0.148 | **No** | 0.399 | 0.274 |
-| Faecal | 0.156 | 0.153 | **No** | −0.091 | −0.103 |
-| ARG | 0.129 | 0.128 | **No** | −0.328 | 0.076 |
-| Composite | 0.104 | 0.100 | **No** | 0.282 | 0.020 |
+| Target | Model error (MAE) | Baseline error | Beats baseline? | Rank agreement inside the held-out city |
+|---|---|---|---|---|
+| Pathogen | 0.160 | 0.148 | No | +0.13 |
+| Faecal | 0.157 | 0.153 | No | +0.03 |
+| ARG | 0.129 | 0.128 | No | −0.05 |
+| Composite | 0.107 | 0.103 | No | +0.20 |
 
-Shallow gradient boosting (secondary check) also fails to beat baseline on MAE
-(LOCO MAE 0.105 vs 0.100; K-fold 0.112 vs 0.100).
+Rank agreement is the Spearman correlation between predicted and observed values
+*inside* each held-out city, averaged over the five cities. For the composite it ranges
+from −0.15 (Ghent) to +0.63 (Benevento). Pooling all predictions into one correlation
+would mix in between-city offsets and overstate skill, so we do not report it as the
+headline.
 
-## Honest headline finding
-**On absolute error (MAE), neither the linear nor the gradient-boosted model beats a
-city-mean baseline for any target.** Landscape features carry only a **weak,
-inconsistent rank signal**: positive for pathogen (LOCO ρ=0.40) and composite
-(ρ=0.28), but negative for faecal and ARG. Risk is strongly city-structured, and
-features that correlate with a city stop helping once that city is held out.
+For faecal risk the figure comes from four cities and for ARG from one: in the other
+held-out cities the model predicts a constant, so there is no ranking to score.
 
-**Consequence for the product:** the model is used only for (1) plain-language
-*explanation* of associations, (2) *coarse pathogen/composite prioritisation* with
-wide intervals, and (3) *scenario direction*. Site health cards lead with **observed
-lab values**, not model predictions. We never present the model as a precise or
-trustworthy absolute predictor, and we never make "safe to swim" claims.
+Random 5-fold cross-validation tells the same story: composite error 0.104 against a
+baseline of 0.101. Pathogen and ARG edge their baselines by 0.002 and 0.001, which is
+noise. Shallow gradient boosting is no better (leave-one-city-out composite
+error 0.105 against 0.103; rank agreement +0.03).
 
-## Descriptive associations (Spearman, n=96, all weak but several significant)
-- Vegetation fragmentation @250 m: ρ = **+0.28** (p=0.006)
-- Distance to wastewater stations: ρ = **−0.22** (p=0.028)
-- Distance to crop fields: ρ = −0.22; to hospitals: ρ = −0.21
-- Impervious surface @2 km: ρ = +0.18
-These are **associational, not causal**, and the effect sizes are small.
+## What the fitted model contains
+- Pathogen: 10 non-zero coefficients. The largest are distance to wastewater stations
+  (negative) and peak rainfall (positive; a station-level value shared by many sites, so
+  mostly a city marker).
+- Faecal: **0 non-zero coefficients.** The penalty removes every feature and the model
+  predicts a constant.
+- ARG: 8 small non-zero coefficients.
+- 80% interval half-widths: pathogen 0.19, faecal 0.21, ARG 0.18, composite 0.11, on a
+  0 to 1 scale where the composite's standard deviation is about 0.13.
 
-## Intended users & use
-Municipal water/health officers and researchers prioritising inspection effort;
-citizen scientists getting a coarse screening band for a new site. Operating
-envelope: the five partner cities. Not validated elsewhere.
+## Consequence for the product
+- No forecasting, no scenario simulation, no estimated risk for unsampled sites. An
+  earlier version had these; they were removed after this validation.
+- The health card shows observed lab values. Landscape factors appear in a collapsed
+  "exploratory" section.
+- The negative result is published as an insight (`INS-MODEL-01`).
 
-## Limitations & ethics
-- Cross-sectional data → no forecasting; "early warning" is a scenario engine plus a
-  real-time-ingestion design, not a fitted temporal model.
-- n=96 with city structure → poor cross-city transfer (shown above).
-- Coordinate-swap detection only catches swaps that land in a partner country;
-  swaps that stay out-of-region (e.g. some Brazilian entries) are flagged only as
-  out-of-region. Documented, not hidden.
-- Scaled 0–1 risks are relative indices, not calibrated probabilities of harm.
+## Limits and ethics
+- 96 sites and five cities is a small test. A larger network or repeated sampling may
+  reveal signal this snapshot cannot.
+- The scaled 0 to 1 risks are relative indices defined by OneAquaHealth, not calibrated
+  probabilities of harm.
 - No personal data is used. Environmental screening only.
 
 ## Reproducibility
-`make analyze` regenerates every number, figure, and the model artifact from the
-raw CSVs. Random seed fixed (42).
+`make analyze` regenerates `outputs/cv_results.json`, `outputs/model_summary.json`,
+`outputs/gbm_comparison.json` and the model file. Random seed 42.

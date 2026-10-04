@@ -1,0 +1,32 @@
+siteCode,name,city_name,samplingDate,scaledPathogenRisk,scaledFecalRisk,scaledArgRisk,composite,reasons,n_reasons
+T12,Fossé de Larramet médian,Toulouse,2023-05-06T00:00:00,0.0495,0.0918,0.6525,0.2646,"high ARG, missed by the composite; composite hides one high component",2
+T10,Canal de Saint Martory,Toulouse,2023-05-06T00:00:00,0.0497,0.0193,0.6355,0.2348333333333333,"high ARG, missed by the composite; composite hides one high component",2
+O14,Hovinbekken - Krokliveien,Oslo,2023-09-06T00:00:00,0.0249,0.112,0.6038,0.2469,"high ARG, missed by the composite; composite hides one high component",2
+G9,Zwalm5 (Zw5),Ghent,2023-05-24T00:00:00,0.1492,0.3966,0.5202,0.35533333333333333,"high ARG, missed by the composite; hotspot within its city",2
+T17,Fossé de pluvial avant rejet dans fossé de Larramet,Toulouse,2023-05-05T00:00:00,0.2525,0.9979,0.3341,0.5281666666666667,composite hides one high component; hotspot within its city,2
+BN2,Cretarossa,Benevento,2023-06-28T00:00:00,0.6456,0.5343,1.0,0.7266333333333334,hotspot within its city,1
+O12,Makrellbekken – ring3,Oslo,2023-09-06T00:00:00,0.0997,0.3184,0.6845,0.3675333333333333,"high ARG, missed by the composite",1
+T13,Ruisseau du Roussimort aval,Toulouse,2023-05-05T00:00:00,0.1243,0.3044,0.6042,0.3443,"high ARG, missed by the composite",1
+O11,Mærradalsbekken - Radiumhospital,Oslo,2023-09-06T00:00:00,0.1734,0.3317,0.6038,0.3696333333333333,"high ARG, missed by the composite",1
+C20,Corujeira,Coimbra,2023-06-06T00:00:00,0.2243,0.2044,0.5623,0.3303333333333333,"high ARG, missed by the composite",1
+T22,Ruisseau de l’Armurié,Toulouse,2023-05-05T00:00:00,0.1988,0.3252,0.5428,0.35559999999999997,"high ARG, missed by the composite",1
+O13,Mærradalsbekken – Huseby skole,Oslo,2023-09-06T00:00:00,0.1242,0.295,0.5408,0.32,"high ARG, missed by the composite",1
+O4,Makrellbekken - Dronningfossen,Oslo,2023-09-06T00:00:00,0.0248,0.2344,0.5403,0.2665,"high ARG, missed by the composite",1
+T25,Ruisseau de l’Armurié,Toulouse,2023-05-05T00:00:00,0.1266,0.4027,0.5096,0.3463,"high ARG, missed by the composite",1
+O17,Alna – Bryn stasjon,Oslo,2023-09-06T00:00:00,0.3364,0.4261,0.497,0.41983333333333334,hotspot within its city,1
+O16,Alna - Kværnerfossene,Oslo,2023-09-06T00:00:00,0.251,0.4781,0.4964,0.40850000000000003,hotspot within its city,1
+G21,Zottegem4 (Zo4),Ghent,2023-05-24T00:00:00,0.0499,0.3255,0.4933,0.2895666666666667,"high ARG, missed by the composite",1
+BN1,Capodimonte,Benevento,2023-06-28T00:00:00,0.2054,0.2427,0.4792,0.3091,"high ARG, missed by the composite",1
+G4,Zottegem3 (Zo3),Ghent,2023-05-24T00:00:00,0.0503,0.1824,0.4763,0.23633333333333337,"high ARG, missed by the composite",1
+G2,Zottegem1 (Zo1),Ghent,2023-05-24T00:00:00,0.1242,0.2672,0.4669,0.28609999999999997,"high ARG, missed by the composite",1
+O7,Ljanselvas mljøpark,Oslo,2023-09-06T00:00:00,0.0993,0.2728,0.462,0.27803333333333335,"high ARG, missed by the composite",1
+O8,Ljanselva – Nedre Ljan Nordstrand,Oslo,2023-09-06T00:00:00,0.149,0.3018,0.4616,0.3041333333333333,"high ARG, missed by the composite",1
+T6,Marcaissonne amont,Toulouse,2023-05-05T00:00:00,0.1502,0.5056,0.4162,0.35733333333333334,high risk the landscape does not explain,1
+G16,Melle2 (Ml2),Ghent,2023-05-25T00:00:00,0.2484,0.2897,0.3971,0.31173333333333336,hotspot within its city,1
+BN15,Corvo Tressanti,Benevento,2023-06-07T00:00:00,0.3487,0.3778,0.3881,0.3715333333333333,high risk the landscape does not explain,1
+C6,Casa do Sal,Coimbra,2023-06-29T00:00:00,0.7351,0.6664,0.3841,0.5952000000000001,hotspot within its city,1
+BN4,Serretelle 4,Benevento,2023-07-03T00:00:00,0.3065,0.4667,0.3717,0.3816333333333333,high risk the landscape does not explain,1
+C5,Mina Hospital,Coimbra,2023-06-29T00:00:00,1.0,1.0,0.3465,0.7821666666666666,hotspot within its city,1
+T5,Marcaissonne aval,Toulouse,2023-05-05T00:00:00,0.154,0.8464,0.2778,0.42606666666666665,composite hides one high component,1
+BN10,Malacagna,Benevento,2023-06-07T00:00:00,0.762,0.8423,0.2686,0.6243,hotspot within its city,1
+BN3,Ponticelli,Benevento,2023-06-06T00:00:00,0.3554,0.7104,0.0,0.3552666666666667,composite hides one high component,1

@@ -1,9 +1,9 @@
-"""Plain-language explanation of a site's risk estimate.
+"""Plain-language landscape context for a site.
 
-Turns standardized elastic-net contributions (coef x standardized feature value)
-into ranked, human-readable drivers with direction. Used by the site health card
-and the citizen copilot. The copilot LLM only ever *rephrases* this output — it
-never invents numbers.
+Turns standardized elastic-net contributions (coefficient x standardized feature
+value) into ranked, human-readable factors with direction. Shown on the site
+health card as EXPLORATORY context only: the model does not beat a baseline on an
+unseen city, so these are associations to investigate, not causes or predictions.
 """
 from __future__ import annotations
 
@@ -50,5 +50,5 @@ def top_drivers_text(model, x_row: np.ndarray, target: str = "composite", k: int
     out = []
     for _, r in df.iterrows():
         verb = "raises" if r["contribution"] >= 0 else "lowers"
-        out.append(f"{r['label'].capitalize()} {verb} the estimate")
+        out.append(f"{r['label'].capitalize()} {verb} the model's estimate")
     return out

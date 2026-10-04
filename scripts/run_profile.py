@@ -68,9 +68,9 @@ def main():
 
     section("CITIZEN DATA-QUALITY REPORT (user_generated_sites.csv)")
     ug = data.load_user_generated()
-    res = quality.validate_submissions(ug)
+    res = quality.validate_submissions(ug, reference=data.research_points())
     print(json.dumps(res.summary, indent=2))
-    flagged = res.df[res.df["status"] == "REVIEW"][["userSiteCode", "name", "latitude", "longitude", "flags"]]
+    flagged = res.df[res.df["status"] == "REVIEW"][["userSiteCode", "name", "latitude", "longitude", "flags", "cluster"]]
     print(f"\n  {len(flagged)} of {len(ug)} submissions flagged for review. Examples:")
     print(flagged.head(20).to_string(index=False))
     res.df.to_csv(OUT / "citizen_quality_report.csv", index=False)

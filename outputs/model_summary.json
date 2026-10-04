@@ -1,0 +1,15 @@
+{
+  "nonzero_coefficients": {
+    "scaledPathogenRisk": 10,
+    "scaledFecalRisk": 0,
+    "scaledArgRisk": 8
+  },
+  "conformal_half_width_80": {
+    "scaledPathogenRisk": 0.194,
+    "scaledFecalRisk": 0.211,
+    "scaledArgRisk": 0.178,
+    "composite": 0.109
+  },
+  "n_train": 96,
+  "n_cal": 24
+}

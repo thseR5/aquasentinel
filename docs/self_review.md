@@ -1,60 +1,64 @@
-# Skeptical self-review (Step 5)
+# Self-review
 
-Reviewing AquaSentinel as a hostile judge would. Three weakest points, each either
-fixed or openly acknowledged.
+AquaSentinel reviewed the way a sceptical judge would review it. The first part lists
+what an earlier version got wrong and what was done about it. The second part lists the
+weaknesses that remain.
 
-## Weakness 1 — "Your model doesn't work."
-**The critique:** On leave-one-city-out, no model beats a city-mean baseline on MAE;
-faecal and ARG rank correlations are *negative*. So why is there a model at all?
+## What the review changed
 
-**Response (acknowledged + reframed, not hidden):** This is true and we lead with it
-on the Drivers & model page and in the model card. Our claim was never "we predict
-risk." The model earns its place three ways: (1) it produces the **plain-language
-driver explanations** on every health card and in the copilot; (2) it gives a **weak
-but positive pathogen/composite rank signal** (LOCO ρ=0.40 / 0.28) usable for *coarse*
-prioritisation where no lab data exists; (3) it powers the **scenario direction** with
-honest wide intervals. Health cards lead with **observed** values, not predictions. A
-submission that faked strong metrics on n=96 cross-sectional data would be less
-credible to a researcher, not more. **This honesty is the differentiator.**
+| Problem found | What we did |
+|---|---|
+| The engine picked the 6 strongest of 59 features and passed them at p < 0.10. Nothing corrected for the 59 tests. | Added a family-wise permutation test. No association clears it, so the three associations that had "survived" are now labelled **exploratory**. |
+| The "risk fingerprints" were described as different risk shapes ("faecal-dominant" against "ARG-dominant"). In fact the two groups differ in the level of pathogen and faecal contamination; ARG is the same in both (0.37 and 0.35). | Relabelled them, and tested the real question directly. That produced the headline: ARG is independent of faecal risk. |
+| The fingerprint test shuffled each column, which only proves the components are correlated. | Replaced the null with simulated data that keeps the correlations but has no clusters, and gave it the same choice of k. The profiles still pass (p = 0.015). |
+| The model's "weak rank signal of 0.40" came from pooling predictions across cities. Inside held-out cities it averages +0.13 for pathogen and ranges from −0.37 to +0.64. | Rank agreement is now computed inside each held-out city. The baseline is named for what it is: the mean of the training cities. |
+| A scenario simulator fired "alerts" on shifts of about 0.03 with an interval of about ±0.26, from a model with no demonstrated skill. Its rainfall slider moved a station-level climate value. | Removed. |
+| The citizen tool estimated risk for a new site from a monitored site up to 50 km away. | Removed. The tool now shows observed lab results only when a monitored site is within 2 km, and says so when there is none. |
+| "79% of citizen entries need review" counted 26 valid sites in Greece, Austria, Brazil and the United States as problems. | Being outside lab coverage is now a note, not a flag. The honest figure is 42% (30 of 71). |
+| Only 1 of 3 swapped coordinates was caught. | Swap detection now uses nearby known points anywhere in the world. All 3 are caught, and a test covers the case where two lone points could each be the other's swap (neither is flagged). |
+| The 80% interval was computed at the 90% quantile of absolute residuals. | Fixed, with the finite-sample correction. |
+| Docs named two different primary tracks and described features that did not exist in the code. | One track (Data-to-Insight). Every claim in the docs maps to code or to a file in `outputs/`. |
 
-## Weakness 2 — "Your risk targets and references are black boxes."
-**The critique:** `scaledPathogenRisk` etc. are 0–1 indices with no stated derivation,
-and the nitrate "EU reference" could mislead.
+## Weaknesses that remain
 
-**Response (partially fixed, partially acknowledged):** We verified and documented the
-one thing we *can* prove — the composite is exactly the mean of the three components
-(max error 7e-5) — and we treat the components, not the composite, as targets. We label
-the scaled risks as **relative indices, not calibrated probabilities of harm**, in the
-model card and UI. The nitrate reference is shown as **indicative context with an
-explicit caveat** that stream thresholds differ; we never render a pass/fail. Remaining
-gap: the upstream scaling method is OneAquaHealth's, not ours — we link to their
-Resilience Map rather than re-deriving it. Documented in the data dictionary.
+**1. The headline is a null result on 96 sites.**
+"No association between faecal and ARG risk" is supported by a confidence interval of
+−0.22 to +0.17. That rules out a strong link, not a small one. Inside cities, ARG is
+weakly related to pathogen risk (ρ = +0.22, p = 0.033), which the feed reports next to
+the headline. The practical claim does not depend on the null: 18 of the 24 highest-ARG
+sites are absent from the composite top quarter, and that is a count of observed values.
 
-## Weakness 3 — "Citizen validation and copilot could give harmful false confidence."
-**The critique:** The swap detector misses swaps that stay out-of-region (e.g. some
-Brazilian entries flagged only as out-of-region), and the copilot estimates a new
-site's risk by borrowing the *nearest* monitored site — which could be misleading.
+**2. City and season are confounded.**
+Ghent and Toulouse were sampled in May, Coimbra and Benevento in June and July, Oslo in
+September. The cross-city differences could be seasonal. The card says so. Only repeated
+sampling can separate them.
 
-**Response (acknowledged + guardrailed):** The swap detector's scope (swaps landing in
-a partner country) is stated in the model card, and out-of-region entries are still
-flagged, so nothing silently passes. The copilot (1) only estimates when a monitored
-site is **within 50 km**, else it refuses and just logs the observation; (2) shows the
-**distance to that borrowed site** and a **wide uncertainty band**; (3) frames output
-as a screening band with actions like "sample again in 2 weeks," never a safety verdict;
-(4) the LLM/explanation layer only rephrases validated data and model coefficients — it
-cannot introduce numbers. These guardrails are demonstrated in the video (the Zwalm
-swap catch).
+**3. One sample per site.**
+Every site-level statement (hotspots, watchlist membership) describes one day. The
+watchlist is framed as "where to sample again", not as a ranking of safety.
 
-## Other known limitations (stated, not fixed in the time box)
-- Cross-sectional data → no true temporal forecasting; the real-time path is designed,
-  not fed.
-- `weather_summary` is station-level context shared across many sites, so its features
-  are coarse.
-- i18n covers English + Portuguese; the other three partner languages are stubs.
-- No formal WCAG audit yet (palette is colour-blind-safe and contrast-aware by design).
+**4. We did not define the risk indices.**
+The 0 to 1 pathogen, faecal and ARG values are scaled upstream by OneAquaHealth. We
+verified that the composite is their mean, but not how each was scaled. If the ARG
+index were scaled in a way that removed real variation, the headline would weaken.
+
+**5. Thresholds are choices.**
+0.15 and p < 0.10 for the city check, 1.5 SD for hotspots, 0.35 for the composite gap,
+25 m for duplicates, 50 km for coverage. They are stated in the code and the docs, and
+the conclusions do not sit on a knife edge (the family-wise p-values are 0.34 to 0.90,
+nowhere near 0.05), but another analyst could choose differently.
+
+**6. The validator's name rule is crude.**
+It flags "S4" as a placeholder name, which may be a real site label, and it would miss
+a test entry with a plausible name.
+
+**7. Not yet built.**
+Insight texts are in English only; the interface is in English and Portuguese. There
+has been no formal accessibility audit. The API is a demonstration mapping, not a
+certified SensorThings or FHIR server.
 
 ## Net assessment
-The submission's strength is an **honest, reproducible pipeline** with a genuinely
-useful **data-quality layer** and **interoperability**, wrapped in a UX that a
-non-expert can use — not an oversold model. Every headline number regenerates with
-`make analyze`.
+The strongest parts are the ones that survive attack: a specific, checkable finding
+about antibiotic resistance, a watchlist that follows from it, and a citizen-data
+cleaner whose every flag can be explained. The weakest part was the predictive model,
+and the product is better for having removed what depended on it.

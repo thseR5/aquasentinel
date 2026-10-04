@@ -64,6 +64,13 @@ def load_user_generated() -> pd.DataFrame:
     return _read("user_generated_sites.csv")
 
 
+def research_points() -> list[tuple[float, float]]:
+    """(lat, lon) of every lab-monitored research site — the reference set the
+    citizen-data validator uses for swap detection and lab coverage."""
+    s = load_sites()[["latitude", "longitude"]].dropna()
+    return list(map(tuple, s.to_numpy(float)))
+
+
 @functools.lru_cache(maxsize=1)
 def build_analysis_table() -> pd.DataFrame:
     """Left-join every research-site source onto the site master table.

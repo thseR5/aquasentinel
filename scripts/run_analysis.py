@@ -61,18 +61,28 @@ def main():
     cv = report.to_dict()
     with open(OUT / "cv_results.json", "w") as f:
         json.dump(cv, f, indent=2)
-    hdr = f"{'target':20s} {'LOCO_MAE':>9s} {'base_MAE':>9s} {'LOCO_rho':>9s} | {'KF_MAE':>8s} {'base':>7s} {'KF_rho':>8s}"
+    hdr = (f"{'target':20s} {'LOCO_MAE':>9s} {'base_MAE':>9s} {'city_rho':>9s} | "
+           f"{'KF_MAE':>8s} {'base':>7s} {'KF_rho':>8s}")
     print(hdr); print("-" * len(hdr))
     for t, r in cv.items():
+        mc = r["loco"]["mean_city_spearman"]
         print(f"{t:20s} {r['loco']['mae']:9.4f} {r['loco_baseline']['mae']:9.4f} "
-              f"{r['loco']['spearman']:9.3f} | {r['kfold']['mae']:8.4f} "
+              f"{(f'{mc:9.3f}' if mc is not None else '     flat')} | {r['kfold']['mae']:8.4f} "
               f"{r['kfold_baseline']['mae']:7.4f} {r['kfold']['spearman']:8.3f}")
+    print("  city_rho = mean rank agreement INSIDE each held-out city ('flat' = constant predictions)")
 
     # ---- Fit full model + conformal, save ----
     section("FIT FULL MODEL + CONFORMAL INTERVALS")
     tm = model.fit_full(feat_df, target_df, feat_names)
     tm.coef_table.to_csv(OUT / "coefficients.csv")
     print(f"Trained on {tm.train_stats['n_train']} sites (calibration split {tm.train_stats['n_cal']}).")
+    nz = {t: int((np.abs(tm.estimators[t].named_steps["enet"].coef_) > 1e-9).sum())
+          for t in RISK_COMPONENTS}
+    print("Non-zero coefficients per target:", nz)
+    with open(OUT / "model_summary.json", "w") as f:
+        json.dump({"nonzero_coefficients": nz,
+                   "conformal_half_width_80": {k: round(v, 3) for k, v in tm.conformal_q.items()},
+                   **tm.train_stats}, f, indent=2)
     print("Conformal 80% half-widths:", {k: round(v, 3) for k, v in tm.conformal_q.items()})
     print("\nTop 10 standardized drivers (mean |coef| across components):")
     print(tm.coef_table.head(10)[RISK_COMPONENTS + ["mean_abs"]].round(3).to_string())
@@ -122,7 +132,7 @@ def _composite_loco(X, df2, feat_names):
     pred = np.zeros(len(df2))
     for t in RISK_COMPONENTS:
         y = df2[t].to_numpy(float)
-        _, _, p = leave_one_city_out(X, y, cities)
+        _, _, p, _ = leave_one_city_out(X, y, cities)
         pred += np.nan_to_num(p)
     return None, None, pred / len(RISK_COMPONENTS)
 

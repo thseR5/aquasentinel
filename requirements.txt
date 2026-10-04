@@ -7,10 +7,11 @@ scikit-learn>=1.3
 joblib>=1.3
 
 # App
-streamlit>=1.40
+streamlit>=1.50
 folium>=0.15
 streamlit-folium>=0.20
 matplotlib>=3.7
+altair>=5.0
 
 # Interoperability API
 fastapi>=0.110

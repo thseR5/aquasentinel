@@ -1,14 +1,16 @@
 {
   "gbm_loco": {
     "mae": 0.10505084457273366,
-    "spearman": 0.11382257189365166
+    "mean_city_spearman": 0.03275984077841662
+  },
+  "loco_baseline": {
+    "mae": 0.10344959182767044
   },
   "gbm_kfold": {
     "mae": 0.11200457142740067,
     "spearman": 0.05938686923494302
   },
-  "baseline": {
-    "mae": 0.1001816189236111,
-    "spearman": NaN
+  "kfold_baseline": {
+    "mae": 0.10088594711209842
   }
 }
